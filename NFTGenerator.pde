@@ -195,10 +195,14 @@ class NFT {
  * @return No return value
  */
  void addAttributes(String attr, String folder) {
+   // Crete new JSON object for asset attributes
    JSONObject attribute = new JSONObject();
+   // Set asset trait_type and value
    attribute.setString("trait_type", getFolderName(folder));
    attribute.setString("value", attr);
+   // Add attribute object to metaAttributes array
    metaAttributes.setJSONObject(jsonIndex, attribute);
+   // Increment jsonIndex for proper placement in metaAttributes array
    jsonIndex++;
  }
   //<>//
