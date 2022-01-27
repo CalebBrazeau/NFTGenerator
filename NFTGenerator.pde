@@ -151,22 +151,19 @@ class NFT {
      // array of contents inside the specified folder in assets folder
      String[] tmp = asset.list();
      // array list to store contents of each folder
-     ArrayList<String> h = new ArrayList<String>();
+     ArrayList<String> folderContents = new ArrayList<String>();
      // add folder name to arraylist
-     h.add(assetFolders[i]);
+     folderContents.add(assetFolders[i]);
      // loop through each asset in contents array
      for(String s: tmp) {
        // add each asset to ArrayList
-       h.add(s);
+       folderContents.add(s);
      }
      // Convert ArrayList to array and append to assets array
-     assets[i] = h.toArray();
+     assets[i] = folderContents.toArray();
    }
-   // View all assets loaded ************************** To be Removed ********************************
-   for(Object s:assets) {
-     println(s);
-   }
-  greemBeem(assets);
+   // Select assets to be used
+   selectAssets(assets);
  }
  
  /**
@@ -175,7 +172,7 @@ class NFT {
  * @exception Any exception
  * @return No return value
  */
- void greemBeem(Object[][] assets) {
+ void selectAssets(Object[][] assets) {
    // Loop through assets array
    for(int i = 0; i < assets.length - 1; i++) {
      // Get random asset from assets array
@@ -211,7 +208,7 @@ class NFT {
    metaAttributes.setJSONObject(jsonIndex, attribute);
    // Increment jsonIndex for proper placement in metaAttributes array
    jsonIndex++;
- }
+ } //<>//
   //<>//
  /**
  * Parse and return rarity of an asset
