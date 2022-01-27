@@ -23,7 +23,7 @@ int sellerRoyalties = 1000;
 
 String[] creatorAddress = {"FDkhgyjVzJHjefCeHmTav4JgZiJqdQmEjMHjWk7FzvRe"}; // Address for share payment in metadata
 
-int[] creatorShare = {100};// Creator share should total no more than 100 
+int[] creatorShare = {100}; // Creator share should total no more than 100 
 
 /**
 * Setup canvas size and run initial code
@@ -87,14 +87,21 @@ void initializeMetaData(int id) {
     metaData.setString("symbol", "");
     metaData.setString("uri", NFTUri);
 
-    JSONArray creatorInfo = new JSONArray();
-    for(int i = 0; i < creatorAddress.length; i++) {
-      // Creator info section
-      JSONObject info = new JSONObject();
-      info.setString("address", creatorAddress[i]);
-      info.setInt("share", creatorShare[i]);
-      creatorInfo.setJSONObject(i,info);
-      metaData.setJSONArray("creators", creatorInfo);
+    if(creatorAddress.length == creatorShare.length) {
+      // Array containing creator(s) address and share percentage
+      JSONArray creatorInfo = new JSONArray();
+      // Loop through each creatorAddress and add their address and share to meta data
+      for(int i = 0; i < creatorAddress.length; i++) {
+        JSONObject info = new JSONObject();
+        info.setString("address", creatorAddress[i]);
+        info.setInt("share", creatorShare[i]);
+        creatorInfo.setJSONObject(i,info);
+        metaData.setJSONArray("creators", creatorInfo);
+      }
+    }
+    else {
+      throw new UhOh("Creator Address array and Creator Share array do not share the same length!" + 
+      "\nCreator Address Length: " + creatorAddress.length + "\nCreator Share Length: " + creatorShare.length);
     }
   } catch(UhOh e) {
     println(e);
@@ -130,24 +137,23 @@ class NFT {
  */
  void loadAssets() {
    // Path to inside asset folder
-   File temp = new File(assetPath + "/");
+   File tempPath = new File(assetPath + "/");
    // Array of contents in asset folder
-   String[] folders =  temp.list();
+   String[] assetFolders =  tempPath.list();
    
    //TODO: Dynamic length for second number
    // Array to contain assets
-   assets = new Object[folders.length][10];
+   assets = new Object[assetFolders.length][10];
    
-   // Loop through assets array and add each asset
-   for(int i = 0; i < folders.length; i++) {
+   for(int i = 0; i < assetFolders.length; i++) {
      // Path to folder in assets folder
-     File asset = new File(assetPath + "/" + folders[i]);
+     File asset = new File(assetPath + "/" + assetFolders[i]);
      // array of contents inside the specified folder in assets folder
      String[] tmp = asset.list();
      // array list to store contents of each folder
      ArrayList<String> h = new ArrayList<String>();
      // add folder name to arraylist
-     h.add(folders[i]);
+     h.add(assetFolders[i]);
      // loop through each asset in contents array
      for(String s: tmp) {
        // add each asset to ArrayList
@@ -179,7 +185,8 @@ class NFT {
        // Reload random asset from assets array
        assett = assets[i][int(rand.random(1, assets[i].length))].toString();
      }
-     if(!getAssetName(assett).equalsIgnoreCase("none")) addAttributes(getAssetName(assett), assets[i][0].toString());
+     String assetName = getAssetName(assett); // Get and store split asset name
+     if(!assetName.equalsIgnoreCase("none")) addAttributes(assetName, assets[i][0].toString());
      println(assett); // Print loaded asset
      
      PImage img = loadImage(assetPath + "/" + assets[i][0] + "/" + assett); // Load retrieved asset as an image
