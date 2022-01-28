@@ -123,7 +123,7 @@ class NFT {
   // Array to initially store all asset files and their directories
   Object[][] assets;
   
-  int jsonIndex = 0;
+  int jsonIndex = 0; // Attribute index for JSON array
   
  /**
  * Generate passed in number of NFT's
@@ -227,9 +227,15 @@ class NFT {
  * @return Float value of parsed asset rarity
  */
  float getRarity(String asset) {
-   String[] rarity = asset.split("#"); // Cut asset name off of asset
-   rarity = rarity[1].split("\\.png"); // Cut '.png' off of rarity number
-   return float(rarity[0]); // Return rarity as float
+   try {
+     String[] rarity = asset.split("#"); // Cut asset name off of asset
+     if(rarity.length == 1) throw new UhOh("No rarity found, defaulting to 100!");
+     rarity = rarity[1].split("\\.png"); // Cut '.png' off of rarity number
+     return float(rarity[0]); // Return rarity as float
+   } catch(UhOh e) {
+     println(e);
+     return 100.0;
+   }
  }
  
  /**
