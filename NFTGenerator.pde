@@ -11,7 +11,10 @@ JSONArray metaAttributes;
 
 // Generate random background color for NFT project
 // RGB range 30-255 to prevent pitch black NFT's
-boolean doRandomBgColor = false;
+boolean doRandomBgColor = true;
+// Min max RGB Color for random background
+int bgMin = 30;
+int bgMax = 256;
 
 // NFT Info for meta data generation
 String NFTName = "Geode";
@@ -173,20 +176,28 @@ class NFT {
  * @return No return value
  */
  void selectAssets(Object[][] assets) {
+   if(doRandomBgColor) { // If user wants random background colors
+     // Generate random color using min and max numbers
+     color bc = color(rand.random(bgMin,bgMax),rand.random(bgMin,bgMax),rand.random(bgMin,bgMax));
+     background(bc); // Set canvas background color
+     addAttributes("background", hex(bc,6)); // Add color to meta data
+   }
    // Loop through assets array
    for(int i = 0; i < assets.length - 1; i++) {
      // Get random asset from assets array
-     String assett = assets[i][int(rand.random(1, assets[i].length))].toString();
+     String asset = assets[i][int(rand.random(1, assets[i].length))].toString();
      // While rarity of retreived asset is less than returned random number
-     while(getRarity(assett) < rand.random(0,100)) {
+     while(getRarity(asset) < rand.random(0,100)) {
        // Reload random asset from assets array
-       assett = assets[i][int(rand.random(1, assets[i].length))].toString();
+       asset = assets[i][int(rand.random(1, assets[i].length))].toString();
      }
-     String assetName = getAssetName(assett); // Get and store split asset name
-     if(!assetName.equalsIgnoreCase("none")) addAttributes(assetName, assets[i][0].toString());
-     println(assett); // Print loaded asset
+     String assetName = getAssetName(asset); // Get and store split asset name
+     if(!assetName.equalsIgnoreCase("none"))
+       addAttributes(assetName, getFolderName(assets[i][0].toString()));
+       
+     println(asset); // Print loaded asset
      
-     PImage img = loadImage(assetPath + "/" + assets[i][0] + "/" + assett); // Load retrieved asset as an image
+     PImage img = loadImage(assetPath + "/" + assets[i][0] + "/" + asset); // Load retrieved asset as an image
      image(img,0,0); // Load image on the canvas
    }
  }
@@ -198,18 +209,17 @@ class NFT {
  * @exception Any exception
  * @return No return value
  */
- void addAttributes(String attr, String folder) {
+ void addAttributes(String attr, String traitType) {
    // Crete new JSON object for asset attributes
    JSONObject attribute = new JSONObject();
    // Set asset trait_type and value
-   attribute.setString("trait_type", getFolderName(folder));
+   attribute.setString("trait_type", traitType);
    attribute.setString("value", attr);
    // Add attribute object to metaAttributes array
    metaAttributes.setJSONObject(jsonIndex, attribute);
    // Increment jsonIndex for proper placement in metaAttributes array
    jsonIndex++;
  } //<>//
-  //<>//
  /**
  * Parse and return rarity of an asset
  * @param asset String containing complete file name of an asset (img #100.png)
