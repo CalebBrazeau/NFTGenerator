@@ -11,7 +11,7 @@ JSONArray metaAttributes;
 
 // Generate random background color for NFT project
 // RGB range 30-255 to prevent pitch black NFT's
-boolean doRandomBgColor = true;
+boolean doRandomBgColor = false;
 // Min max RGB Color for random background
 int bgMin = 30;
 int bgMax = 256;
@@ -49,13 +49,19 @@ void gen(int amount) {
   
   // Loop to generate specified number of NFT's
   for(int i = 0; i < amount; i++) {
+    // Initialize meta data file
     initializeMetaData(i);
+    
     // Create new NFT Object
     NFT nft = new NFT();
+    
+    // Add generated attributes array to meta data file 
     metaData.setJSONArray("attributes", metaAttributes);
+    
     // Save generated NFT
     save("gen/" + i + ".png");
     saveJSONObject(metaData, "gen/" + i + ".json");
+    
     // Log saved image, helps show progression so you know the program is working
     println("Saved: " + i + ".png");
   } 
@@ -102,11 +108,11 @@ void initializeMetaData(int id) {
         metaData.setJSONArray("creators", creatorInfo);
       }
     }
-    else {
+    else { // Frowed Up
       throw new UhOh("Creator Address array and Creator Share array do not share the same length!" + 
       "\nCreator Address Length: " + creatorAddress.length + "\nCreator Share Length: " + creatorShare.length);
     }
-  } catch(UhOh e) {
+  } catch(UhOh e) { // Uh Oh
     println(e);
     System.exit(0);
   }
@@ -123,7 +129,8 @@ class NFT {
   // Array to initially store all asset files and their directories
   Object[][] assets;
   
-  int jsonIndex = 0; // Attribute index for JSON array
+  // Attribute index for JSON array
+  int jsonIndex = 0;
   
  /**
  * Generate passed in number of NFT's
@@ -131,6 +138,7 @@ class NFT {
  * @return No return value.
  */
  NFT() {
+   // Load assets from assets folder
    loadAssets();
  }
  /**
@@ -153,10 +161,13 @@ class NFT {
      File asset = new File(assetPath + "/" + assetFolders[i]);
      // array of contents inside the specified folder in assets folder
      String[] tmp = asset.list();
+     
      // array list to store contents of each folder
      ArrayList<String> folderContents = new ArrayList<String>();
+     
      // add folder name to arraylist
      folderContents.add(assetFolders[i]);
+     
      // loop through each asset in contents array
      for(String s: tmp) {
        // add each asset to ArrayList
@@ -176,29 +187,40 @@ class NFT {
  * @return No return value
  */
  void selectAssets(Object[][] assets) {
-   if(doRandomBgColor) { // If user wants random background colors
+   // If user wants random background colors
+   if(doRandomBgColor) {
      // Generate random color using min and max numbers
      color bc = color(rand.random(bgMin,bgMax),rand.random(bgMin,bgMax),rand.random(bgMin,bgMax));
-     background(bc); // Set canvas background color
-     addAttributes("background", hex(bc,6)); // Add color to meta data
+     // Set canvas background color
+     background(bc);
+     // Add color to meta data
+     addAttributes("background", hex(bc,6));
    }
+   
    // Loop through assets array
    for(int i = 0; i < assets.length - 1; i++) {
      // Get random asset from assets array
      String asset = assets[i][int(rand.random(1, assets[i].length))].toString();
+     
      // While rarity of retreived asset is less than returned random number
      while(getRarity(asset) < rand.random(0,100)) {
        // Reload random asset from assets array
        asset = assets[i][int(rand.random(1, assets[i].length))].toString();
      }
-     String assetName = getAssetName(asset); // Get and store split asset name
+     // Get and store split asset name
+     String assetName = getAssetName(asset);
+     
+     // If returned asset name is not equal to 'none'
      if(!assetName.equalsIgnoreCase("none"))
+       // Add the attribute to meta data
        addAttributes(assetName, getFolderName(assets[i][0].toString()));
        
-     println(asset); // Print loaded asset
+     println(asset); // Print loaded asset ****** to be removed ******
      
-     PImage img = loadImage(assetPath + "/" + assets[i][0] + "/" + asset); // Load retrieved asset as an image
-     image(img,0,0); // Load image on the canvas
+     // Load retrieved asset as an image
+     PImage img = loadImage(assetPath + "/" + assets[i][0] + "/" + asset);
+     // Load image on the canvas
+     image(img,0,0);
    }
  }
 
@@ -212,11 +234,14 @@ class NFT {
  void addAttributes(String attr, String traitType) {
    // Crete new JSON object for asset attributes
    JSONObject attribute = new JSONObject();
+   
    // Set asset trait_type and value
    attribute.setString("trait_type", traitType);
    attribute.setString("value", attr);
+   
    // Add attribute object to metaAttributes array
    metaAttributes.setJSONObject(jsonIndex, attribute);
+   
    // Increment jsonIndex for proper placement in metaAttributes array
    jsonIndex++;
  } //<>//
@@ -228,11 +253,19 @@ class NFT {
  */
  float getRarity(String asset) {
    try {
-     String[] rarity = asset.split("#"); // Cut asset name off of asset
+     // Cut asset name off of asset
+     String[] rarity = asset.split("#");
+     
+     // If there was no defined rarity throw exception
      if(rarity.length == 1) throw new UhOh("No rarity found, defaulting to 100!");
-     rarity = rarity[1].split("\\.png"); // Cut '.png' off of rarity number
-     return float(rarity[0]); // Return rarity as float
-   } catch(UhOh e) {
+     
+     // Cut '.png' off of rarity number
+     rarity = rarity[1].split("\\.png");
+     
+     // Return rarity as float
+     return float(rarity[0]);
+   } catch(UhOh e) { // I frowed up :(
+     // Print and return default value
      println(e);
      return 100.0;
    }
@@ -245,9 +278,24 @@ class NFT {
  * @return String of properly parsed file name (waterfall)
  */
  String getAssetName(String asset) {
-   String[] cutRarity = asset.split("#"); // Cut #<int>.png off asset
-   cutRarity = cutRarity[0].split(" "); // Cut trailing space off asset
-   return cutRarity[0]; // Return asset name (Crystal_Green_Gen5)
+   try { //<>//
+     // Cut #<rarity>.png off asset
+     String[] assetName = asset.split("#");
+     
+     // If there is no defined rarity throw exception
+     if(assetName.length == 1) throw new UhOh("No rarity found!");
+     
+     // Cut trailing space off asset
+     assetName = assetName[0].split(" ");
+     
+     // Return asset name (Crystal_Green_Gen5)
+     return assetName[0];
+   } catch(UhOh e) { // Throws when missing rarity
+   // ******************* Still in Development :) **************
+     println(e);
+     //return "idkman"; // Return asset name
+     return "idkman";
+   }
  }
  
  /**
@@ -257,12 +305,15 @@ class NFT {
  * @return String value of parsed folder name (background)
  */
  String getFolderName(String folder) {
-   String[] parse = folder.split(" "); // Split on spaces
+   // Split on spaces
+   String[] parse = folder.split(" ");
+   
    // Return 3rd element, if following folder conventions will be trait_type (background)
    return parse[2];
  }
 }
 
+// 100% Stole this from somwhere, idk where the link went
 class Rand { 
   long seed;
   long a;
