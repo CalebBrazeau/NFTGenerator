@@ -11,7 +11,7 @@ JSONArray metaAttributes;
 
 // Generate random background color for NFT project
 // RGB range 30-255 to prevent pitch black NFT's
-boolean doRandomBgColor = false;
+boolean doRandomBgColor = true;
 // Min max RGB Color for random background
 int bgMin = 30;
 int bgMax = 256;
@@ -34,8 +34,10 @@ int[] creatorShare = {100}; // Creator share should total no more than 100
 * @return No return value.
 */
 void setup(){
-  size(400,400);// Canvas size/NFT resolution
-  gen(2); // Number of NFT's to generate
+  // Canvas size/NFT resolution
+  size(400,400);
+  // Number of NFT's to generate
+  gen(2);
 }
 
 /**
@@ -45,7 +47,8 @@ void setup(){
 * @return No return value.
 */
 void gen(int amount) {
-  long startTime = System.currentTimeMillis(); // Log initial system time
+  // Log initial system time
+  long startTime = System.currentTimeMillis();
   
   // Loop to generate specified number of NFT's
   for(int i = 0; i < amount; i++) {
@@ -81,21 +84,27 @@ void initializeMetaData(int id) {
     // Create/Reset meta data JSON object
     metaData = new JSONObject();
     metaAttributes = new JSONArray();
+    
     // Check if creator shares are valid
     int shareTotal = 0;
     for(int i:creatorShare) {
+      // Add share index to total 
       shareTotal += i;
+      // If share total is greater than 100, Throw exception
       if(shareTotal > 100) throw new UhOh("Share total greater than 100! Total: " + shareTotal);
     } 
+    // If share total is less than 100, Throw exception
     if(shareTotal < 100) throw new UhOh("Share total less than 100! Total: " + shareTotal);
     // Check if seller royalties are valid
     if(sellerRoyalties > 10000 || sellerRoyalties < 0) throw new UhOh("Seller royalties greater than 10000 or less than 0! Royalties: " + sellerRoyalties);
+    
     metaData.setString("name", NFTName + " #" + (id + 1));
     metaData.setString("description", NFTDescription);
     metaData.setInt("seller_fee_basis_points", sellerRoyalties);
     metaData.setString("symbol", "");
     metaData.setString("uri", NFTUri);
 
+    // If creator address array and creator share array are the same length
     if(creatorAddress.length == creatorShare.length) {
       // Array containing creator(s) address and share percentage
       JSONArray creatorInfo = new JSONArray();
@@ -113,6 +122,7 @@ void initializeMetaData(int id) {
       "\nCreator Address Length: " + creatorAddress.length + "\nCreator Share Length: " + creatorShare.length);
     }
   } catch(UhOh e) { // Uh Oh
+    // Print and exit program
     println(e);
     System.exit(0);
   }
@@ -213,7 +223,7 @@ class NFT {
      // If returned asset name is not equal to 'none'
      if(!assetName.equalsIgnoreCase("none"))
        // Add the attribute to meta data
-       addAttributes(assetName, getFolderName(assets[i][0].toString()));
+       addAttributes(getFolderName(assets[i][0].toString()), assetName);
        
      println(asset); // Print loaded asset ****** to be removed ******
      
