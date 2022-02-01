@@ -18,15 +18,20 @@ int bgMax = 256;
 
 // NFT Info for meta data generation
 String NFTName = "Geode";
+// Description of NFT Collection or generalized information about the NFT
 String NFTDescription = "An exclusive collection of <int> unique Geode NFT's grown in the Solana blockchain";
+// Name of the NFT Collection
 String collectionName = "Geode";
+// URI to individual NFT images
 String NFTUri = "uri.uri.com";
 // 0-10000 royalties are divided by 100 for percentage, i.e. 1000 would be 10%
 int sellerRoyalties = 1000;
 
-String[] creatorAddress = {"FDkhgyjVzJHjefCeHmTav4JgZiJqdQmEjMHjWk7FzvRe"}; // Address for share payment in metadata
+// Address for share payment in metadata
+String[] creatorAddress = {"FDkhgyjVzJHjefCeHmTav4JgZiJqdQmEjMHjWk7FzvRe"};
 
-int[] creatorShare = {100}; // Creator share should total no more than 100 
+// Creator share should total no more than 100 
+int[] creatorShare = {100};
 
 /**
 * Setup canvas size and run initial code
@@ -277,7 +282,7 @@ class NFT {
    } catch(UhOh e) { // I frowed up :(
      // Print and return default value
      println(e);
-     return 100.0;
+     return 100.0f;
    }
  }
  

@@ -37,13 +37,13 @@
 > ### Instructions:
 > 1. Load assets into '/assets/' folder. The folders must be in order for how you want them to stack from bottom to top. For example, if the 'background' folder is bellow the 'faces' folder, the background will be layerd on top of the 'faces' asset.
 > 2. ***IMPORTANT*** Change the following variables:
->>   1. &lt;17&gt;: **NFTName**: Set to the name of your NFT/NFT Collection.
->>   1. &lt;18&gt;: **NFTDescription**: Set to the description of your NFT Collection. (e.g. An exclusive collection of unique Geode NFT's grown in the Solana blockchain).
->>   1. &lt;19&gt;: **collectionName**: Set to the name of your NFT Collection.
->>   1. &lt;20&gt;: **NFTUri**: Set to the URI of where the files are stored.
->>   1. &lt;22&gt;: **sellerRoyalties**: Set to the amount royalties you want to recieve from secondary sales. The number represents a percentage so it should be 100x the amount of royalties you want to receive. (e.g. 1000 would be 10%)
->>   1. &lt;24&gt;: **creatorAddress**: This array contains the address to distribute currency to during sales. Either change the current address to your address or add more address. To add more addresses, add a comma after the end quote, then add the new address in quotations. (e.g. {"&lt;address&gt;"} would turn into {"&lt;address&gt;", "&lt;address&gt;"})
->>   1. &lt;26&gt;: **creatorShare**: This array contains the share percentage to give to each creator address. Either change the current address to your address or add more address. If you add more addresses you must update this to include either a 0 or a split between the two addresses. To add new shares, simply add a comma at the end of the first value then add the new value. (e.g. {&lt;share&gt;} would turn into {&lt;share&gt;, &lt;share&gt;}) 
+>>   1. &lt;20&gt;: **NFTName**: Set to the name of your NFT/NFT Collection.
+>>   1. &lt;22&gt;: **NFTDescription**: Set to the description of your NFT Collection. (e.g. An exclusive collection of unique Geode NFT's grown in the Solana blockchain).
+>>   1. &lt;24&gt;: **collectionName**: Set to the name of your NFT Collection.
+>>   1. &lt;26&gt;: **NFTUri**: Set to the URI of where the files are stored.
+>>   1. &lt;28&gt;: **sellerRoyalties**: Set to the amount royalties you want to recieve from secondary sales. The number represents a percentage so it should be 100x the amount of royalties you want to receive. (e.g. 1000 would be 10%)
+>>   1. &lt;31&gt;: **creatorAddress**: This array contains the address to distribute currency to during sales. Either change the current address to your address or add more address. To add more addresses, add a comma after the end quote, then add the new address in quotations. (e.g. {"&lt;address&gt;"} would turn into {"&lt;address&gt;", "&lt;address&gt;"})
+>>   1. &lt;34&gt;: **creatorShare**: This array contains the share percentage to give to each creator address. Either change the current address to your address or add more address. If you add more addresses you must update this to include either a 0 or a split between the two addresses. To add new shares, simply add a comma at the end of the first value then add the new value. (e.g. {&lt;share&gt;} would turn into {&lt;share&gt;, &lt;share&gt;}) 
 ***NOTE:*** This must total 100, or the program will throw an error. There also must be an equal number of addresses to shares or the program will throw an error.
 > 3. ***\*OPTIONAL:\****
 >    1. If you want random background colors set, **doRandomBgColor** on line 14, to '*true*'.
