@@ -1,5 +1,6 @@
 /**
 * NFTGenerator --- Program that layers assets together to generate NFT's and their meta data
+* Tips greatly appreciated :) FDkhgyjVzJHjefCeHmTav4JgZiJqdQmEjMHjWk7FzvRe SOL
 * @author Caleb Brazeau
 */
 import java.io.File;
@@ -42,7 +43,7 @@ void setup(){
   // Canvas size/NFT resolution
   size(400,400);
   // Number of NFT's to generate
-  gen(2);
+  gen(30);
 }
 
 /**
@@ -167,7 +168,7 @@ class NFT {
    // Array of contents in asset folder
    String[] assetFolders =  tempPath.list();
    
-   //TODO: Dynamic length for second number
+   // TODO: Dynamic length for second number
    // Array to contain assets
    assets = new Object[assetFolders.length][10];
    
@@ -209,7 +210,7 @@ class NFT {
      // Set canvas background color
      background(bc);
      // Add color to meta data
-     addAttributes("background", hex(bc,6));
+     addAttributes("background", "#" + hex(bc,6));
    }
    
    // Loop through assets array
@@ -230,7 +231,7 @@ class NFT {
        // Add the attribute to meta data
        addAttributes(getFolderName(assets[i][0].toString()), assetName);
        
-     println(asset); // Print loaded asset ****** to be removed ******
+     //println(asset); // Print loaded asset ****** to be removed ******
      
      // Load retrieved asset as an image
      PImage img = loadImage(assetPath + "/" + assets[i][0] + "/" + asset);
